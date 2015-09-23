@@ -86,6 +86,10 @@
 
         };
 
+        this.signup = function(credentials){
+            return $http.post('/api/members',credentials);
+        };
+
         this.login = function (credentials) {
             return $http.post('/login', credentials)
                 .then(onSuccessfulLogin)
