@@ -37,7 +37,7 @@ describe('Room model', function() {
 
     describe('password encryption', function () {
       it('should create room', function (done) {
-        return Room.create({owner:mongoUser._id}).then(function(room){
+        return Room.create({name:'Test Room',owner:mongoUser._id}).then(function(room){
           expect(room).to.be.an('object');
         },function(err){
           expect(err).to.be.an('null');
@@ -50,7 +50,7 @@ describe('Room model', function() {
           member1=mem1;
           return createUser('second@test.com');
         }).then(function(mem2){
-          return Room.create({owner:mongoUser._id,members:[member1._id,mem2._id]});
+          return Room.create({name:'Test Room',owner:mongoUser._id,members:[member1._id,mem2._id]});
         }).then(function(room){
           if(!room) throw new Error();
           expect(room.members.length).to.equal(2);
@@ -65,7 +65,7 @@ describe('Room model', function() {
           member1=mem1;
           return createUser('second@test.com');
         }).then(function(mem2){
-          return Room.create({owner:mongoUser._id,members:[member1._id,mem2._id,mongoUser._id,member1._id]});
+          return Room.create({name:'Test Room',owner:mongoUser._id,members:[member1._id,mem2._id,mongoUser._id,member1._id]});
         }).then(function(room){
           if(!room) throw new Error();
           room.members.push(mongoUser._id);
@@ -78,7 +78,7 @@ describe('Room model', function() {
       });
 
       it('should set html, css, and js fields', function (done) {
-        return Room.create({owner:mongoUser._id,html:['html'],css:['css','css2'],js:['js','js2','js3']}).then(function(room){
+        return Room.create({name:'Test Room',owner:mongoUser._id,html:[{name:'index.html',content:'html'}],css:[{name:'main.css',content:'css'},{name:'second.css',content:'css'}],js:[{name:'main.js',content:'js'},{name:'second.js',content:'js'},{name:'third.js',content:'js'}]}).then(function(room){
           expect(room.html.length+room.css.length+room.js.length).to.equal(6);
         },function(err){
           expect(err).to.be.an('null');
