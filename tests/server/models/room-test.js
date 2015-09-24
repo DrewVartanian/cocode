@@ -78,7 +78,7 @@ describe('Room model', function() {
       });
 
       it('should set html, css, and js fields', function (done) {
-        return Room.create({name:'Test Room',owner:mongoUser._id,html:['html'],css:['css','css2'],js:['js','js2','js3']}).then(function(room){
+        return Room.create({name:'Test Room',owner:mongoUser._id,html:[{name:'index.html',content:'html'}],css:[{name:'main.css',content:'css'},{name:'second.css',content:'css'}],js:[{name:'main.js',content:'js'},{name:'second.js',content:'js'},{name:'third.js',content:'js'}]}).then(function(room){
           expect(room.html.length+room.css.length+room.js.length).to.equal(6);
         },function(err){
           expect(err).to.be.an('null');

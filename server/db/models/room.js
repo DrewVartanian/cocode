@@ -18,15 +18,36 @@ var schema = new mongoose.Schema({
         default: []
     },
     html: {
-        type: [String],
+        type: [{
+            name: {
+                type: String
+            },
+            content: {
+                type: String
+            }
+        }],
         default: []
     },
     css: {
-        type: [String],
+        type: [{
+            name: {
+                type: String
+            },
+            content: {
+                type: String
+            }
+        }],
         default: []
     },
     js: {
-        type: [String],
+        type: [{
+            name: {
+                type: String
+            },
+            content: {
+                type: String
+            }
+        }],
         default: []
     }
 });
