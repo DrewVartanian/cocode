@@ -37,8 +37,8 @@ describe('Room model', function() {
 
     describe('password encryption', function () {
       it('should create room', function (done) {
-        return Room.create({owner:mongoUser._id}).then(function(user){
-          expect(user).to.be.an('object');
+        return Room.create({owner:mongoUser._id}).then(function(room){
+          expect(room).to.be.an('object');
         },function(err){
           expect(err).to.be.an('null');
         }).then(done,done);
@@ -76,5 +76,14 @@ describe('Room model', function() {
           expect(err).to.be.an('null');
         }).then(done,done);
       });
+
+      it('should set html, css, and js fields', function (done) {
+        return Room.create({owner:mongoUser._id,html:['html'],css:['css','css2'],js:['js','js2','js3']}).then(function(room){
+          expect(room.html.length+room.css.length+room.js.length).to.equal(6);
+        },function(err){
+          expect(err).to.be.an('null');
+        }).then(done,done);
+      });
+
     });
 });
