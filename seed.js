@@ -22,17 +22,21 @@ var Promise = require('bluebird');
 var chalk = require('chalk');
 var connectToDb = require('./server/db');
 var User = Promise.promisifyAll(mongoose.model('User'));
+var Room = Promise.promisifyAll(mongoose.model('Room'));
+
+var owner;
+var member;
 
 var seedUsers = function () {
 
     var users = [
         {
-            email: 'testing@fsa.com',
-            password: 'password'
-        },
-        {
             email: 'obama@gmail.com',
             password: 'potus'
+        },
+        {
+            email: 'testing@fsa.com',
+            password: 'password'
         }
     ];
 
@@ -40,10 +44,38 @@ var seedUsers = function () {
 
 };
 
+var seedRooms = function () {
+
+    var rooms = [
+        {
+            name:'Test Room',
+            owner:owner._id,
+            members:[member._id],
+            html:['html'],
+            css:['css','css2'],
+            js:['js','js2','js3']
+        }
+    ];
+
+    return Room.createAsync(rooms);
+
+};
+
 connectToDb.then(function () {
     User.findAsync({}).then(function (users) {
         if (users.length === 0) {
             return seedUsers();
+        } else {
+            console.log(chalk.magenta('Seems to already be user data, exiting!'));
+            process.kill(0);
+        }
+    }).then(function(users){
+        owner=users[1];
+        member=users[0];
+        return Room.findAsync({});
+    }).then(function(rooms){
+        if (rooms.length === 0) {
+            return seedRooms();
         } else {
             console.log(chalk.magenta('Seems to already be user data, exiting!'));
             process.kill(0);
