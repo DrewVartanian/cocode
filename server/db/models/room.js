@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 var schema = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     members: {
         type: [mongoose.Schema.Types.ObjectId],
@@ -28,7 +29,7 @@ var schema = new mongoose.Schema({
 schema.pre('save', function(next) {
 
     if (this.isModified('members')) {
-        var owner = this.owner.toString();
+        var owner = this.owner;
         var membI;
         for (var i = 0; i < this.members.length; i++) {
             membI = this.members[i];
