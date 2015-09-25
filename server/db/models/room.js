@@ -12,11 +12,10 @@ var schema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    members: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'User',
-        default: []
-    },
+    members: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     html: {
         type: [{
             name: {

@@ -1,19 +1,49 @@
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Room Members</h3>
+    </div>
+    <div class="modal-body">
+        <ul class="list-group">
+            <li class="list-group-item" style="background-color:lightgrey">
+              Owner: {{room.owner.email}}
+            <li class="list-group-item clearfix" ng-repeat="member in room.members">
+              {{ member.email}}
+              <button class="btn btn-danger float-right no-focus" type="button" ng-click="remove(member._id)">X</button>
+            </li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <form name='newMemberForm' ng-submit="add()">
+          <input type="text" placeholder="New Member" ng-model="newMember">
+          <button class="btn btn-primary no-focus" type="submit">Add Member</button>
+          <button class="btn btn-warning no-focus" type="button" ng-click="cancel()">Back</button>
+        </form>
+    </div>
+</script>
+<div class="center-text">
+  <button type="button" class="btn btn-default controll-row no-focus">Download Files</button>
+  <button type="button" class="btn btn-default controll-row no-focus" ng-click="open()">Room Members</button>
+  <div class="btn-group controll-row" role="group">
+    <button type="button" class="btn btn-default width-orient active no-focus"><i class="glyphicon glyphicon-pause"></i></button>
+    <button type="button" class="btn btn-default width-orient no-focus"><i class="glyphicon glyphicon-pause gly-rotate-90"></i></button>
+  </div>
+</div>
 <div class="col-md-6">
   <tabset>
     <tab heading="{{tab}}" ng-repeat="tab in tabNames" ng-click="changeTab(tab)"></tab>
   </tabset>
   <div class="clearfix margin-top">
     <div class="btn-group" dropdown is-open="status.isopen">
-      <button id="single-button" type="button" class="btn btn-default" dropdown-toggle ng-disabled="disabled">
+      <button id="single-button" type="button" class="btn btn-default no-focus" dropdown-toggle ng-disabled="disabled">
         {{selectedFile.name}} <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
         <li role="menuitem" ng-repeat="file in room[selectedFileType]" ng-click="changeFile(file)"><a href="#">{{file.name}}</a></li>
       </ul>
     </div>
-    <button type="button" class="btn btn-default float-right" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
+    <button type="button no-focus" class="btn btn-default float-right" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
   </div>
-  <textarea class="fill-width" rows="33" ng-model="selectedFile.content"></textarea>
+  <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content"></textarea>
 </div>
 <div class="col-md-6">
   <!-- <iframe class="fill-width" src="http://www.w3schools.com/jsref/jsref_replace.asp" id="protoPage"></iframe> -->
