@@ -53,12 +53,9 @@ body {
   outline: 0;
 }
 
-#editor {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+.ace_editor  {
+  height: 666px;
+  border: 1px solid #ddd;
 }
 
 .gly-rotate-90 {
