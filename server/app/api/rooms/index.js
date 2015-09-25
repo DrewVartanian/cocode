@@ -6,6 +6,14 @@ var mongoose = require('mongoose');
 var Room = mongoose.model('Room');
 var User = mongoose.model('User');
 
+function sanitizeUserInfo(room){
+    room.owner= {_id:room.owner._id,email:room.owner.email};
+    room.members.forEach(function(member){
+        member={_id:member._id,email:member.email};
+    });
+    return room;
+}
+
 router.get('/myRooms', function(req, res, next){
     if(!req.user) res.json([]);
     Room.find({$or: [{owner:req.user._id},{members:req.user._id}]}).then(function(rooms){
@@ -40,7 +48,7 @@ router.put('/code', function(req,res,next){
     }).then(function(room){
         return room.populate('members').populate('owner').execPopulate();
     }).then(function(room){
-        res.json(room);
+        res.json(sanitizeUserInfo(room));
     }).then(null,next);
 });
 
@@ -61,7 +69,7 @@ router.put('/member/add', function(req,res,next){
     }).then(function(room){
         return room.populate('members').populate('owner').execPopulate();
     }).then(function(room){
-        res.json(room);
+        res.json(sanitizeUserInfo(room));
     }).then(null,next);
 });
 
@@ -86,7 +94,7 @@ router.put('/member/remove', function(req,res,next){
     }).then(function(room){
         return room.populate('members').populate('owner').execPopulate();
     }).then(function(room){
-        res.json(room);
+        res.json(sanitizeUserInfo(room));
     }).then(null,next);
 });
 
@@ -107,6 +115,6 @@ router.param('roomId', function(req, res, next, roomId) {
 });
 
 router.get('/:roomId', function(req, res){
-    res.json(req.room);
+    res.json(sanitizeUserInfo(req.room));
 });
 
