@@ -6,6 +6,13 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     $scope.items = ['item1', 'item2', 'item3'];
     var protoPage = $('#proto-page').get()[0];
 
+    $scope.socket = io(location.origin);
+    $scope.socket.emit('newVisitor', {
+        //user this time will involve the cookie object OR anonymous
+        // "user": "Anon",
+        "room": $scope.room._id
+    });
+
     $scope.updateProtoPage = function() {
         var doc;
         if (protoPage.contentDocument) doc = protoPage.contentDocument;
@@ -34,20 +41,18 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     $scope.changeTab = function(tab) {
         $scope.selectedFileType = tab.toLowerCase();
         $scope.selectedFile = $scope.room[$scope.selectedFileType][0];
-        console.log($scope.selectedFile.name);
     };
 
     $scope.changeFile = function(file) {
         $scope.selectedFile = file;
     };
 
-    $scope.saveAndRender = function(room) {
-        console.log("content", $scope.selectedFile.content);
-        console.log("content", $scope.room.css[0].content);
-        RoomFactory.saveAndRender(room).then(function(room) {
-            $scope.room = room;
-            $scope.selectedFile = room[$scope.selectedFileType][0];
+    $scope.saveAndRender = function(roomParam) {
+        RoomFactory.saveAndRender(roomParam).then(function(roomRes) {
+            $scope.room = roomRes;
+            $scope.selectedFile = roomRes[$scope.selectedFileType][0];
             $scope.updateProtoPage();
+            $scope.socket.emit('updateView');
         }).then(null, function(err) {
             console.log(err);
         });
@@ -55,7 +60,7 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
 
     $scope.open = function(size) {
 
-        var modalInstance = $modal.open({
+        $modal.open({
             animation: $scope.animationsEnabled,
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
@@ -92,7 +97,26 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
           $('#btn-horiz').addClass('active');
           $('#btn-vert').removeClass('active');
         }
-      };
+    };
+
+    $scope.emitCode = function() {
+        setTimeout(function(){
+            $scope.socket.emit('codeEdit',{
+                "selectedFileType":$scope.selectedFileType,
+                "content":$scope.selectedFile.content
+            });
+        },1);
+    };
+
+    $scope.socket.on('codeEdited', function(code) {
+        $scope.room[code.selectedFileType][0].content=code.content;
+        $scope.$digest();
+    });
+
+    $scope.socket.on('viewUpdated', function() {
+        $scope.updateProtoPage();
+        $scope.$digest();
+    });
 
     $scope.updateProtoPage();
 });
