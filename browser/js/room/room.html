@@ -24,11 +24,11 @@
   <button type="button" class="btn btn-default controll-row no-focus">Download Files</button>
   <button type="button" class="btn btn-default controll-row no-focus" ng-click="open()">Room Members</button>
   <div class="btn-group controll-row" role="group">
-    <button type="button" class="btn btn-default width-orient active no-focus"><i class="glyphicon glyphicon-pause"></i></button>
-    <button type="button" class="btn btn-default width-orient no-focus"><i class="glyphicon glyphicon-pause gly-rotate-90"></i></button>
+    <button type="button" class="btn btn-default width-orient active no-focus" ng-click="reorient('horiz')" id="btn-horiz"><i class="glyphicon glyphicon-pause"></i></button>
+    <button type="button" class="btn btn-default width-orient no-focus" ng-click="reorient('vert')" id="btn-vert"><i class="glyphicon glyphicon-pause gly-rotate-90"></i></button>
   </div>
 </div>
-<div class="col-md-6">
+<div class="col-md-6 display-pannel">
   <tabset>
     <tab heading="{{tab}}" ng-repeat="tab in tabNames" ng-click="changeTab(tab)"></tab>
   </tabset>
@@ -45,7 +45,7 @@
   </div>
   <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content"></textarea>
 </div>
-<div class="col-md-6">
+<div class="col-md-6 display-pannel">
   <!-- <iframe class="fill-width" src="http://www.w3schools.com/jsref/jsref_replace.asp" id="protoPage"></iframe> -->
   <iframe class="fill-width" id="proto-page"></iframe>
 </div>
