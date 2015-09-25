@@ -21,9 +21,21 @@ app.factory('RoomFactory', function($http) {
     };
 
     var saveAndRender = function(room) {
-      console.log(room.css[0]);
-      console.log(room.html[0]);
       return $http.put('/api/rooms/code',{room:room})
+            .then(function(res) {
+              return res.data;
+            });
+    };
+
+    var addMember = function(room,email) {
+      return $http.put('/api/rooms/member/add',{roomId:room._id,email:email})
+            .then(function(res) {
+              return res.data;
+            });
+    };
+
+    var removeMember = function(room,memberId) {
+      return $http.put('/api/rooms/member/remove',{roomId:room._id,memberId:memberId})
             .then(function(res) {
               return res.data;
             });
@@ -33,6 +45,8 @@ app.factory('RoomFactory', function($http) {
         getRoom:getRoom,
         createRoom:createRoom,
         getMyRooms:getMyRooms,
-        saveAndRender:saveAndRender
+        saveAndRender:saveAndRender,
+        addMember:addMember,
+        removeMember:removeMember
     };
 });
