@@ -1,2 +1,21 @@
-<h2>Room State!</h2>
-{{room}}
+<div class="col-md-6">
+  <tabset>
+    <tab heading="{{tab}}" ng-repeat="tab in tabNames" ng-click="changeTab(tab)"></tab>
+  </tabset>
+  <div class="clearfix margin-top">
+    <div class="btn-group" dropdown is-open="status.isopen">
+      <button id="single-button" type="button" class="btn btn-default" dropdown-toggle ng-disabled="disabled">
+        {{selectedFile.name}} <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+        <li role="menuitem" ng-repeat="file in room[selectedFileType]" ng-click="changeFile(file)"><a href="#">{{file.name}}</a></li>
+      </ul>
+    </div>
+    <button type="button" class="btn btn-default float-right" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
+  </div>
+  <textarea class="fill-width" rows="33" ng-model="selectedFile.content"></textarea>
+</div>
+<div class="col-md-6">
+  <!-- <iframe class="fill-width" src="http://www.w3schools.com/jsref/jsref_replace.asp" id="protoPage"></iframe> -->
+  <iframe class="fill-width" id="proto-page"></iframe>
+</div>

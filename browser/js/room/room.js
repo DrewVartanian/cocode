@@ -6,7 +6,6 @@ app.config(function($stateProvider) {
         controller: 'RoomController',
         resolve: {
             room: function(RoomFactory,$stateParams) {
-                console.log('room state resolve');
                 return RoomFactory.getRoom($stateParams.roomId);
             }
         },

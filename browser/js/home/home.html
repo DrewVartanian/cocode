@@ -1,4 +1,23 @@
 <section id="home">
     <fullstack-logo></fullstack-logo>
-    <rando-greeting></rando-greeting>
+    <br>
+    <form ng-submit="createRoom(newRoomName,user)" ng-show="user">
+      <div class="center-text">Create Room: <input type="text" ng-model="newRoomName" placeholder="New Room Name"></div>
+    </form>
+    <div ng-hide="ownedRooms.length===0">
+      <h3>Owned Rooms</h3>
+      <ul>
+        <li ng-repeat="room in ownedRooms">
+          <a ui-sref="room({roomId:room._id})">{{room.name}}</a>
+        </li>
+      </ul>
+    </div>
+    <div ng-hide="memberRooms.length===0">
+      <h3>Member Rooms</h3>
+      <ul>
+        <li ng-repeat="room in memberRooms">
+          <a ui-sref="room({roomId:room._id})">{{room.name}}</a>
+        </li>
+      </ul>
+    </div>
 </section>
