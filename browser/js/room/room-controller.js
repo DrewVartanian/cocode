@@ -108,6 +108,22 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         },1);
     };
 
+    $scope.downloadCode = function() {
+        console.log('download');
+        var zip = new JSZip();
+        $scope.room.html.forEach(function(file){
+            zip.file(file.name, file.content);
+        });
+        $scope.room.css.forEach(function(file){
+            zip.file(file.name, file.content);
+        });
+        $scope.room.js.forEach(function(file){
+            zip.file(file.name, file.content);
+        });
+        var content = zip.generate();
+        location.href="data:application/zip;base64," + content;
+    };
+
     $scope.socket.on('codeEdited', function(code) {
         $scope.room[code.selectedFileType][0].content=code.content;
         $scope.$digest();
