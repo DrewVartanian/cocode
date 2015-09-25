@@ -43,7 +43,10 @@
     </div>
     <button type="button no-focus" class="btn btn-default float-right" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
   </div>
-  <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content" ng-keydown="emitCode()"></textarea>
+  <!-- <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content" ng-keydown="emitCode()"></textarea> -->
+  <pre id="embedded_ace_code" style="height: 666px;" class=" ace_editor ace-tm">
+    <div id="editor" ng-model="selectedFile.content"></div>
+  </pre>
 </div>
 <div class="col-md-6 display-pannel">
   <!-- <iframe class="fill-width" src="http://www.w3schools.com/jsref/jsref_replace.asp" id="protoPage"></iframe> -->

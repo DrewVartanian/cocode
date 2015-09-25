@@ -134,6 +134,10 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         $scope.$digest();
     });
 
+    var editor = ace.edit("editor");
+    // editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+
     $scope.updateProtoPage();
 });
 
