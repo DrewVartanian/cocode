@@ -8,6 +8,9 @@
     "postinstall": "gulp build",
     "test": "gulp testServerJS"
   },
+  "engines": {
+    "node": "0.12.7"
+  },
   "dependencies": {
     "angular": "^1.4.0",
     "angular-bootstrap": "^0.12.0",
