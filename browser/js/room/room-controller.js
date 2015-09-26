@@ -3,7 +3,6 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     $scope.tabNames = ['HTML', 'CSS', 'JS'];
     $scope.selectedFileType = $scope.tabNames[0].toLowerCase();
     $scope.selectedFile = room[$scope.selectedFileType][0];
-    $scope.items = ['item1', 'item2', 'item3'];
     var protoPage = $('#proto-page').get()[0];
 
     $scope.socket = io(location.origin);
@@ -22,16 +21,16 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         var content = '<style>\n';
 
         $scope.room.css.forEach(function(file) {
-            content += file.content;
+            content += file.content+'\n';
         });
 
-        content += '\n</style>\n' + $scope.room.html[0].content + '\n<script type="text/javascript">';
+        content += '</style>\n' + $scope.room.html[0].content + '\n<script type="text/javascript">';
 
         $scope.room.js.forEach(function(file) {
-            content += file.content;
+            content += file.content+'\n';
         });
 
-        content += '\n</script>';
+        content += '</script>';
 
         doc.open();
         doc.writeln(content);
@@ -59,19 +58,32 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         });
     };
 
-    $scope.open = function(size) {
+    $scope.openMemberModal = function(size) {
 
         $modal.open({
             animation: $scope.animationsEnabled,
-            templateUrl: 'myModalContent.html',
-            controller: 'ModalInstanceCtrl',
-            size: size,
+            templateUrl: 'memberModalContent.html',
+            controller: 'MemberModalInstanceCtrl',
             resolve: {
-                items: function() {
-                    return $scope.items;
-                },
                 room: function() {
                     return $scope.room;
+                }
+            }
+        });
+    };
+
+    $scope.openFileModal = function(size) {
+
+        $modal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: 'fileModalContent.html',
+            controller: 'FileModalInstanceCtrl',
+            resolve: {
+                room: function() {
+                    return $scope.room;
+                },
+                selectedFileType: function() {
+                    return $scope.selectedFileType;
                 }
             }
         });
@@ -104,7 +116,7 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         setTimeout(function(){
             $scope.socket.emit('codeEdit',{
                 "selectedFileType":$scope.selectedFileType,
-                "content":$scope.selectedFile.content
+                "file":$scope.selectedFile
             });
         },50);
     };
@@ -125,8 +137,16 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         location.href="data:application/zip;base64," + content;
     };
 
+    $scope.$on('roomChange', function (event, data) {
+        $scope.room=data;
+    });
+
     $scope.socket.on('codeEdited', function(code) {
-        $scope.room[code.selectedFileType][0].content=code.content;
+        $scope.room[code.selectedFileType].some(function(file){
+            if(file.name===code.file.name){
+                file.content=code.file.content;
+            }
+        });
         $scope.$digest();
     });
 
@@ -149,21 +169,50 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     $scope.updateProtoPage();
 });
 
-app.controller('ModalInstanceCtrl', function($scope, $modalInstance, items, room, RoomFactory) {
-
-    $scope.items = items;
+app.controller('MemberModalInstanceCtrl', function($scope, $rootScope, $modalInstance, room, RoomFactory) {
     $scope.room = room;
 
-    $scope.add = function() {
+    $scope.addMember = function() {
         RoomFactory.addMember($scope.room, $scope.newMember).then(function(retRoom) {
             $scope.room = retRoom;
             $scope.newMember = '';
+            $rootScope.$broadcast('roomChange', retRoom);
         });
     };
 
-    $scope.remove = function(memberId) {
+    $scope.removeMember = function(memberId) {
         RoomFactory.removeMember($scope.room, memberId).then(function(retRoom) {
             $scope.room = retRoom;
+            $rootScope.$broadcast('roomChange', retRoom);
+        });
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+});
+
+app.controller('FileModalInstanceCtrl', function($scope, $rootScope, $modalInstance, room, selectedFileType, RoomFactory) {
+
+    $scope.room = room;
+    $scope.selectedFileType = selectedFileType;
+    $scope.main = room[selectedFileType][0];
+    $scope.files = room[selectedFileType].slice(1);
+
+    $scope.addFile = function() {
+        RoomFactory.addFile($scope.room, $scope.newFile, $scope.selectedFileType).then(function(retRoom) {
+            $scope.room = retRoom;
+            $scope.newFile = '';
+            $scope.files = retRoom[selectedFileType].slice(1);
+            $rootScope.$broadcast('roomChange', retRoom);
+        });
+    };
+
+    $scope.removeFile = function(fileName) {
+        RoomFactory.removeFile($scope.room, fileName, $scope.selectedFileType).then(function(retRoom) {
+            $scope.room = retRoom;
+            $scope.files = retRoom[selectedFileType].slice(1);
+            $rootScope.$broadcast('roomChange', retRoom);
         });
     };
 

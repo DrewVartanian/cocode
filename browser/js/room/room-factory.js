@@ -41,12 +41,28 @@ app.factory('RoomFactory', function($http) {
             });
     };
 
+    var addFile = function(room,newFile,fileType) {
+      return $http.put('/api/rooms/file/add',{roomId:room._id,newFile:newFile,fileType:fileType})
+            .then(function(res) {
+              return res.data;
+            });
+    };
+
+    var removeFile = function(room,fileName,fileType) {
+      return $http.put('/api/rooms/file/remove',{roomId:room._id,fileName:fileName,fileType:fileType})
+            .then(function(res) {
+              return res.data;
+            });
+    };
+
     return{
         getRoom:getRoom,
         createRoom:createRoom,
         getMyRooms:getMyRooms,
         saveAndRender:saveAndRender,
         addMember:addMember,
-        removeMember:removeMember
+        removeMember:removeMember,
+        addFile:addFile,
+        removeFile:removeFile
     };
 });

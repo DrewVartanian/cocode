@@ -108,12 +108,61 @@ router.put('/member/remove', function(req,res,next){
     }).then(null,next);
 });
 
+router.put('/file/add', function(req,res,next){
+    console.log('Adding File');
+    if(!req.user) return next(new Error("Must be logged in"));
+    if(req.body.fileType!=='css'&&req.body.fileType!=='js') return next(new Error("Can only add CSS or JavaScript files"));
+    Room.findById(req.body.roomId).then(function(room){
+        if(req.user._id.toString()!==room.owner.toString()&&room.members.every(function(member){
+            return member.toString()!==req.user._id.toString();
+        })){
+            return next(new Error("User is not a member of the room"));
+        }
+        var fileName = req.body.newFile.slice(-1*(req.body.fileType.length+1))==="."+req.body.fileType?req.body.newFile:req.body.newFile+"."+req.body.fileType;
+        if(room[req.body.fileType].some(function(file){
+            return file.name===fileName;
+        })){
+            return next(new Error("File Already Exists"));
+        }
+        room[req.body.fileType].push({name:fileName,content:''});
+        return room.save();
+    }).then(function(room){
+        return room.populate('members').populate('owner').execPopulate();
+    }).then(function(room){
+        res.json(sanitizeUserInfo(room));
+    }).then(null,next);
+});
+
+router.put('/file/remove', function(req,res,next){
+    console.log('Removing File');
+    if(!req.user) return next(new Error("Must be logged in"));
+    if(req.body.fileType!=='css'&&req.body.fileType!=='js') return next(new Error("Can only add CSS or JavaScript files"));
+    Room.findById(req.body.roomId).then(function(room){
+        if(req.user._id.toString()!==room.owner.toString()&&room.members.every(function(member){
+            return member.toString()!==req.user._id.toString();
+        })){
+            return next(new Error("User is not a member of the room"));
+        }
+        var i;
+        if(room[req.body.fileType].every(function(file,index){
+            if(file.name===req.body.fileName){
+                i=index;
+                return false;
+            }
+            return true;
+        })){
+            return next(new Error("File Dose Not Exists"));
+        }
+        room[req.body.fileType].splice(i,1);
+        return room.save();
+    }).then(function(room){
+        return room.populate('members').populate('owner').execPopulate();
+    }).then(function(room){
+        res.json(sanitizeUserInfo(room));
+    }).then(null,next);
+});
+
 router.param('roomId', function(req, res, next, roomId) {
-    // if (!req.user || (userId !== req.user._id.toString() && !req.user.isAdmin)) {
-    //     var err = new Error('Wrong user');
-    //     err.status = 403;
-    //     return next(err);
-    // }
     Room.findById(roomId).populate('members').populate('owner').then(function(room) {
             if(req.user._id.toString()!==room.owner._id.toString()&&room.members.every(function(member){
                 return member._id.toString()!==req.user._id.toString();
