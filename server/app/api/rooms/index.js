@@ -37,7 +37,9 @@ router.put('/code', function(req,res,next){
         console.log('owner',req.user._id.toString());
         console.log('owner',req.body.room.owner);
     Room.findById(req.body.room._id).then(function(room){
-        if(req.user._id.toString()!==room.owner.toString()&&room.members.indexOf(req.user._id.toString())===-1){
+        if(req.user._id.toString()!==room.owner.toString()&&room.members.every(function(member){
+            return member.toString()!==req.user._id.toString();
+        })){
             return next(new Error("User is not a member of the room"));
         }
         room.html=req.body.room.html;
@@ -56,13 +58,20 @@ router.put('/member/add', function(req,res,next){
     if(!req.user) return next(new Error("Must be logged in"));
     var mongoRoom;
     Room.findById(req.body.roomId).then(function(room){
-        if(req.user._id.toString()!==room.owner.toString()&&room.members.indexOf(req.user._id.toString())===-1){
+        if(req.user._id.toString()!==room.owner.toString()&&room.members.every(function(member){
+            return member.toString()!==req.user._id.toString();
+        })){
             return next(new Error("User is not a member of the room"));
         }
         mongoRoom=room;
         return User.find({email:req.body.email});
     }).then(function(users){
         if(!users||!users[0]) return next(new Error("User not found"));
+        if(users[0]._id.toString()===mongoRoom.owner.toString()||mongoRoom.members.some(function(member){
+            return member.toString()===users[0]._id.toString();
+        })){
+            return next(new Error("User is already in room"));
+        }
         mongoRoom.members.push(users[0]._id);
         return mongoRoom.save();
     }).then(function(room){
@@ -76,7 +85,9 @@ router.put('/member/remove', function(req,res,next){
     console.log('Deleting Member');
     if(!req.user) return next(new Error("Must be logged in"));
     Room.findById(req.body.roomId).then(function(room){
-        if(req.user._id.toString()!==room.owner.toString()&&room.members.indexOf(req.user._id.toString())===-1){
+        if(req.user._id.toString()!==room.owner.toString()&&room.members.every(function(member){
+            return member.toString()!==req.user._id.toString();
+        })){
             return next(new Error("User is not a member of the room"));
         }
         var i=-1;
@@ -104,6 +115,11 @@ router.param('roomId', function(req, res, next, roomId) {
     //     return next(err);
     // }
     Room.findById(roomId).populate('members').populate('owner').then(function(room) {
+            if(req.user._id.toString()!==room.owner._id.toString()&&room.members.every(function(member){
+                return member._id.toString()!==req.user._id.toString();
+            })){
+                return next(new Error("User is not a member of the room"));
+            }
             req.room = room;
             next();
         }).then(null, function(err) {
