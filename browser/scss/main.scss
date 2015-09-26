@@ -58,6 +58,16 @@ body {
   border: 1px solid #ddd;
 }
 
+.file-button {
+  max-width: 93px;
+  overflow: hidden;
+}
+
+.manage-file-button {
+  position: absolute;
+  left: 112px
+}
+
 .gly-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
   -webkit-transform: rotate(90deg);
