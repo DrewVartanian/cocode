@@ -27,10 +27,14 @@ router.post('/', function(req,res,next){
     Room.create({name:req.body.roomName,owner:req.body.owner,
         html:[{name:'index.html',content:''}],
         css:[{name:'main.css',content:''}],
-        js:[{name:'main.js',content:''}]}).then(function(room){
-            res.json(room);
-        }).then(null,next);
+        js:[{name:'main.js',content:''}]
+    }).then(function(room){
+        res.json(room);
+    }).then(null,function(err){
+        next(err);
+    }).then(null,next);
 });
+
 
 router.put('/code', function(req,res,next){
     if(!req.user) return next(new Error("Must be logged in"));
@@ -64,7 +68,7 @@ router.put('/member/add', function(req,res,next){
             return next(new Error("User is not a member of the room"));
         }
         mongoRoom=room;
-        return User.find({email:req.body.email});
+        return User.find({email:req.body.email.toLowerCase()});
     }).then(function(users){
         if(!users||!users[0]) return next(new Error("User not found"));
         if(users[0]._id.toString()===mongoRoom.owner.toString()||mongoRoom.members.some(function(member){
@@ -182,3 +186,9 @@ router.get('/:roomId', function(req, res){
     res.json(sanitizeUserInfo(req.room));
 });
 
+router.delete('/:roomId', function(req,res,next){
+    if(req.room.owner._id.toString()!==req.user._id.toString()) return next(new Error("Must be room owner to delete room"));
+    req.room.remove().then(function(){
+        res.sendStatus(204);
+    }).then(null, next);
+});
