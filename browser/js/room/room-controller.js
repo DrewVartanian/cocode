@@ -41,6 +41,7 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     $scope.changeTab = function(tab) {
         $scope.selectedFileType = tab.toLowerCase();
         $scope.selectedFile = $scope.room[$scope.selectedFileType][0];
+        $scope.aceOption.mode = $scope.selectedFileType;
     };
 
     $scope.changeFile = function(file) {
@@ -135,7 +136,7 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     });
 
     $scope.aceOption = {
-    mode: 'html',
+        mode: 'html',
         onLoad: function (_ace) {
           // HACK to have the ace instance in the scope...
           $scope.modeChanged = function () {
