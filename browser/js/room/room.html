@@ -1,4 +1,4 @@
-<script type="text/ng-template" id="myModalContent.html">
+<script type="text/ng-template" id="memberModalContent.html">
     <div class="modal-header">
         <h3 class="modal-title">Room Members</h3>
     </div>
@@ -8,21 +8,43 @@
               Owner: {{room.owner.email}}
             <li class="list-group-item clearfix" ng-repeat="member in room.members">
               {{ member.email}}
-              <button class="btn btn-danger float-right no-focus" type="button" ng-click="remove(member._id)">X</button>
+              <button class="btn btn-danger float-right no-focus" type="button" ng-click="removeMember(member._id)">X</button>
             </li>
         </ul>
     </div>
     <div class="modal-footer">
-        <form name='newMemberForm' ng-submit="add()">
+        <form name='newMemberForm' ng-submit="addMember()">
           <input type="text" placeholder="New Member" ng-model="newMember">
           <button class="btn btn-primary no-focus" type="submit">Add Member</button>
           <button class="btn btn-warning no-focus" type="button" ng-click="cancel()">Back</button>
         </form>
     </div>
 </script>
+<script type="text/ng-template" id="fileModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{selectedFileType.toUpperCase()}} Files</h3>
+    </div>
+    <div class="modal-body">
+        <ul class="list-group">
+            <li class="list-group-item" style="background-color:lightgrey">
+              {{main.name}}
+            <li class="list-group-item clearfix" ng-repeat="file in files">
+              {{file.name}}
+              <button class="btn btn-danger float-right no-focus" type="button" ng-click="removeFile(file.name)">X</button>
+            </li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <form name='newMemberForm' ng-submit="addFile()">
+          <input type="text" placeholder="New File" ng-model="newFile">
+          <button class="btn btn-primary no-focus" type="submit">Add File</button>
+          <button class="btn btn-warning no-focus" type="button" ng-click="cancel()">Back</button>
+        </form>
+    </div>
+</script>
 <div class="center-text">
   <button type="button" class="btn btn-default controll-row no-focus" ng-click="downloadCode()">Download Files</button>
-  <button type="button" class="btn btn-default controll-row no-focus" ng-click="open()">Room Members</button>
+  <button type="button" class="btn btn-default controll-row no-focus" ng-click="openMemberModal()">Room Members</button>
   <div class="btn-group controll-row" role="group">
     <button type="button" class="btn btn-default width-orient active no-focus" ng-click="reorient('horiz')" id="btn-horiz"><i class="glyphicon glyphicon-pause"></i></button>
     <button type="button" class="btn btn-default width-orient no-focus" ng-click="reorient('vert')" id="btn-vert"><i class="glyphicon glyphicon-pause gly-rotate-90"></i></button>
@@ -35,12 +57,15 @@
   <div class="clearfix margin-top">
     <div class="btn-group" dropdown is-open="status.isopen">
       <button id="single-button" type="button" class="btn btn-default no-focus" dropdown-toggle ng-disabled="disabled">
-        {{selectedFile.name}} <span class="caret"></span>
+        {{selectedFile.name}} <span ng-hide="selectedFileType==='html'" class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
         <li role="menuitem" ng-repeat="file in room[selectedFileType]" ng-click="changeFile(file)"><a href="#">{{file.name}}</a></li>
       </ul>
     </div>
+    <button ng-hide="selectedFileType==='html'" type="button" class="btn btn-info no-focus" ng-click="openFileModal()">
+      Manage {{selectedFileType.toUpperCase()}} File
+    </button>
     <button type="button no-focus" class="btn btn-default float-right" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
   </div>
   <!-- <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content" ng-keydown="emitCode()"></textarea> -->
