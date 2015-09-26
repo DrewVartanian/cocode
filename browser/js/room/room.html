@@ -47,7 +47,7 @@
   <!-- <pre id="embedded_ace_code" style="height: 666px;" class=" ace_editor ace-tm">
     <div id="editor" ng-model="selectedFile.content"></div>
   </pre> -->
-  <div ui-ace="aceOption" ng-model="selectedFile.content" ng-keydown="emitCode()"></div>
+  <div ui-ace="aceOption" ng-model="selectedFile.content" ng-change="emitCode()"></div>
 </div>
 <div class="col-md-6 display-pannel">
   <!-- <iframe class="fill-width" src="http://www.w3schools.com/jsref/jsref_replace.asp" id="protoPage"></iframe> -->
