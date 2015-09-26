@@ -134,9 +134,16 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         $scope.$digest();
     });
 
-    var editor = ace.edit("editor");
-    // editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/javascript");
+    $scope.aceOption = {
+    mode: 'html',
+        onLoad: function (_ace) {
+          // HACK to have the ace instance in the scope...
+          $scope.modeChanged = function () {
+            _ace.getSession().setMode("ace/mode/javascript");
+          };
+
+        }
+    };
 
     $scope.updateProtoPage();
 });
