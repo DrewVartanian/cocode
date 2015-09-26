@@ -50,7 +50,11 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     $scope.saveAndRender = function(roomParam) {
         RoomFactory.saveAndRender(roomParam).then(function(roomRes) {
             $scope.room = roomRes;
-            $scope.selectedFile = roomRes[$scope.selectedFileType][0];
+            roomRes[$scope.selectedFileType].some(function(file){
+                if(file.name===$scope.selectedFile.name){
+                    $scope.selectedFile = file;
+                }
+            });
             $scope.updateProtoPage();
             $scope.socket.emit('updateView');
         }).then(null, function(err) {
@@ -145,7 +149,9 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         $scope.room[code.selectedFileType].some(function(file){
             if(file.name===code.file.name){
                 file.content=code.file.content;
+                return true;
             }
+            return false;
         });
         $scope.$digest();
     });

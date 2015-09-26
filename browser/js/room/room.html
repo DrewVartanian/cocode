@@ -56,14 +56,14 @@
   </tabset>
   <div class="clearfix margin-top">
     <div class="btn-group" dropdown is-open="status.isopen">
-      <button id="single-button" type="button" class="btn btn-default no-focus" dropdown-toggle ng-disabled="disabled">
+      <button id="single-button" type="button" class="btn btn-default file-button no-focus" dropdown-toggle ng-disabled="disabled">
         {{selectedFile.name}} <span ng-hide="selectedFileType==='html'" class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
         <li role="menuitem" ng-repeat="file in room[selectedFileType]" ng-click="changeFile(file)"><a href="#">{{file.name}}</a></li>
       </ul>
     </div>
-    <button ng-hide="selectedFileType==='html'" type="button" class="btn btn-info no-focus" ng-click="openFileModal()">
+    <button ng-hide="selectedFileType==='html'" type="button" class="btn btn-info manage-file-button no-focus" ng-click="openFileModal()">
       Manage {{selectedFileType.toUpperCase()}} File
     </button>
     <button type="button no-focus" class="btn btn-default float-right" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
