@@ -106,7 +106,7 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
                 "selectedFileType":$scope.selectedFileType,
                 "content":$scope.selectedFile.content
             });
-        },10);
+        },50);
     };
 
     $scope.downloadCode = function() {
