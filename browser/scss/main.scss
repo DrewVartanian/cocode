@@ -49,6 +49,10 @@ body {
   outline: 0;
 }
 
+iframe.unsaved {
+  outline: ridge thick red;
+}
+
 .fill-width.no-focus:focus {
   outline: 0;
 }
