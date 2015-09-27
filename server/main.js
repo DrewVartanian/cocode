@@ -27,6 +27,10 @@ var createApplication = function () {
         socket.on('updateView', function(viewInfo) {
             socket.broadcast.to(room).emit('viewUpdated',viewInfo);
         });
+
+        socket.on('chatSent', function(chat) {
+            socket.broadcast.to(room).emit('chatReceived', chat);
+        });
     });
 };
 

@@ -1,16 +1,19 @@
-app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
+app.controller('RoomController', function($scope, room, RoomFactory, user, $modal) {
     $scope.room = room;
     $scope.tabNames = ['HTML', 'CSS', 'JS'];
     $scope.selectedFileType = $scope.tabNames[0].toLowerCase();
     $scope.selectedFile = room[$scope.selectedFileType][0];
     $scope.unsavedView=false;
     $scope.unsavedCode=false;
+    $scope.chat=false;
+    $scope.chatMessage='';
+    $scope.chatLog='';
+    $scope.unseenChat='';
     var protoPage = $('#proto-page');
+    var chatWindow = $('#chatWindow');
 
     $scope.socket = io(location.origin);
     $scope.socket.emit('newVisitor', {
-        //user this time will involve the cookie object OR anonymous
-        // "user": "Anon",
         "room": $scope.room._id
     });
 
@@ -40,7 +43,6 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         if($scope.unsavedView){
             protoPage.addClass('unsaved');
         }else{
-            console.log('test');
             protoPage.removeClass('unsaved');
         }
     };
@@ -180,9 +182,9 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         location.href="data:application/zip;base64," + content;
     };
 
-    $scope.$on('roomChange', function (event, data) {
-        $scope.room=data;
-    });
+    // $scope.$on('roomChange', function (event, data) {
+    //     $scope.room=data;
+    // });
 
     $scope.socket.on('codeEdited', function(code) {
         if(!$scope.unsavedCode){
@@ -222,7 +224,37 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         }
     };
 
+    $scope.showChat = function(){
+        $scope.chat=!$scope.chat;
+        if($scope.chat) $scope.unseenChat='';
+    };
+
+    $scope.sendChat = function(){
+        var message=$scope.chatMessage;
+        setTimeout(function(){
+            $scope.socket.emit('chatSent',{
+                "email":user.email,
+                "chatMessage":message
+            });
+            $scope.chatLog+='\n'+user.email+': '+message;
+            $scope.$digest();
+        },50);
+        $scope.chatMessage='';
+    };
+
+    $scope.socket.on('chatReceived', function (chat) {
+        $scope.chatLog+='\n'+chat.email+': '+chat.chatMessage;
+        if(!$scope.chat){
+            $scope.unseenChat='unseenChat';
+        }
+        $scope.$digest();
+    });
+
     $scope.updateProtoPage();
+
+    $(function() {
+        $( "#chat" ).draggable();
+    });
 });
 
 app.controller('MemberModalInstanceCtrl', function($scope, $rootScope, $modalInstance, room, RoomFactory) {

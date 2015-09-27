@@ -82,6 +82,33 @@ li {
   }
 }
 
+#chat {
+  position: absolute;
+  top: 137px;
+  left: 50%;
+  width: 400px;
+  height: 300px;
+  padding: 0.5em;
+  z-index: 100;
+}
+
+#chat-window {
+  background-color: white;
+  width: 375px;
+  margin: 5px;
+  resize: none;
+}
+
+#chat-btn {
+  position: absolute;
+  right: 15px;
+  top: 4px;
+}
+
+.unseenChat {
+  color: red;
+}
+
 .gly-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
   -webkit-transform: rotate(90deg);
@@ -95,6 +122,7 @@ iframe {
   height: 713px !important;
   margin-top: 40px;
 }
+
 
 @import 'directives/main';
 @import 'home/main';
