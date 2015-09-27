@@ -66,7 +66,10 @@
     <button ng-hide="selectedFileType==='html'" type="button" class="btn btn-info manage-file-button no-focus" ng-click="openFileModal()">
       Manage {{selectedFileType.toUpperCase()}} File
     </button>
-    <button type="button no-focus" class="btn btn-default float-right no-focus" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
+    <div class="float-right">
+      <button type="button no-focus" class="btn btn-default no-focus" ng-click="preview()">Preview</button>
+      <button type="button no-focus" class="btn btn-default no-focus" ng-click="saveAndRender()">Save and Render</button>
+    </div>
   </div>
   <!-- <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content" ng-keydown="emitCode()"></textarea> -->
   <!-- <pre id="embedded_ace_code" style="height: 666px;" class=" ace_editor ace-tm">

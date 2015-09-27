@@ -47,8 +47,13 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         $scope.selectedFile = file;
     };
 
-    $scope.saveAndRender = function(roomParam) {
-        RoomFactory.saveAndRender(roomParam).then(function(roomRes) {
+    $scope.preview = function() {
+        $scope.updateProtoPage();
+        $('#proto-page').addClass('unsaved');
+    };
+
+    $scope.saveAndRender = function() {
+        RoomFactory.saveAndRender($scope.room).then(function(roomRes) {
             $scope.room = roomRes;
             roomRes[$scope.selectedFileType].some(function(file){
                 if(file.name===$scope.selectedFile.name){
@@ -56,6 +61,7 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
                 }
             });
             $scope.updateProtoPage();
+            $('#proto-page').removeClass('unsaved');
             $scope.socket.emit('updateView');
         }).then(null, function(err) {
             console.log(err);
