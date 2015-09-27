@@ -7,6 +7,9 @@ app.config(function($stateProvider) {
         resolve: {
             room: function(RoomFactory,$stateParams) {
                 return RoomFactory.getRoom($stateParams.roomId);
+            },
+            user: function(AuthService){
+                return AuthService.getLoggedInUser();
             }
         },
         // The following data.authenticate is read by an event listener

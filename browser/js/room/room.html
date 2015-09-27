@@ -50,8 +50,20 @@
     <button type="button" class="btn btn-default width-orient no-focus" ng-click="reorient('vert')" id="btn-vert"><i class="glyphicon glyphicon-pause gly-rotate-90"></i></button>
   </div>
 </div>
+<div id="chat" ng-show="chat" class="ui-widget-content">
+  Chat: {{room.name}}
+  <button class="btn btn-xs btn-danger float-right no-focus" type="button" ng-click="showChat()">X</button>
+  <textarea id="chat-window" rows="10" readonly>
+    {{chatLog}}
+  </textarea>
+  <form name='newMemberForm' class="float-right" ng-submit="sendChat()">
+    <input type="text" ng-model="chatMessage" style="width:316px;">
+    <button class="btn btn-primary no-focus" type="submit">Send</button>
+  </form>
+</div>
 <div class="col-md-6 display-pannel">
   <tabset>
+    <button id="chat-btn" type="button" class="btn btn-default no-focus" ng-click="showChat()"><i class="fa fa-weixin" ng-class="unseenChat" ></i></button>
     <tab heading="{{tab}}" ng-repeat="tab in tabNames" ng-click="changeTab(tab)"></tab>
   </tabset>
   <div class="clearfix margin-top">
@@ -67,9 +79,9 @@
       Manage {{selectedFileType.toUpperCase()}} File
     </button>
     <div class="float-right">
-      <button type="button no-focus" ng-show="unsavedCode" class="btn btn-default no-focus" ng-click="revert()"><i class="fa fa-undo"></i></button>
-      <button type="button no-focus" class="btn btn-default no-focus" ng-click="preview()">Preview</button>
-      <button type="button no-focus" class="btn btn-default no-focus" ng-click="saveAndRender()">Save</button>
+      <button type="button" ng-show="unsavedCode" class="btn btn-default no-focus" ng-click="revert()"><i class="fa fa-undo"></i></button>
+      <button type="button" class="btn btn-default no-focus" ng-click="preview()">Preview</button>
+      <button type="button" class="btn btn-default no-focus" ng-click="saveAndRender()">Save</button>
     </div>
   </div>
   <!-- <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content" ng-keydown="emitCode()"></textarea> -->

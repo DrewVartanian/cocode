@@ -38,8 +38,6 @@ router.post('/', function(req,res,next){
 
 router.put('/code', function(req,res,next){
     if(!req.user) return next(new Error("Must be logged in"));
-        console.log('owner',req.user._id.toString());
-        console.log('owner',req.body.room.owner);
     Room.findById(req.body.room._id).then(function(room){
         if(req.user._id.toString()!==room.owner.toString()&&room.members.every(function(member){
             return member.toString()!==req.user._id.toString();
