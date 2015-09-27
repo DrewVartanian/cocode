@@ -24,8 +24,8 @@ var createApplication = function () {
             socket.broadcast.to(room).emit('codeEdited', code);
         });
 
-        socket.on('updateView', function() {
-            socket.broadcast.to(room).emit('viewUpdated');
+        socket.on('updateView', function(viewInfo) {
+            socket.broadcast.to(room).emit('viewUpdated',viewInfo);
         });
     });
 };

@@ -3,7 +3,9 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     $scope.tabNames = ['HTML', 'CSS', 'JS'];
     $scope.selectedFileType = $scope.tabNames[0].toLowerCase();
     $scope.selectedFile = room[$scope.selectedFileType][0];
-    var protoPage = $('#proto-page').get()[0];
+    $scope.unsavedView=false;
+    $scope.unsavedCode=false;
+    var protoPage = $('#proto-page');
 
     $scope.socket = io(location.origin);
     $scope.socket.emit('newVisitor', {
@@ -14,9 +16,9 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
 
     $scope.updateProtoPage = function() {
         var doc;
-        if (protoPage.contentDocument) doc = protoPage.contentDocument;
-        else if (protoPage.contentWindow) doc = protoPage.contentWindow.document;
-        else doc = protoPage.document;
+        if (protoPage.get()[0].contentDocument) doc = protoPage.get()[0].contentDocument;
+        else if (protoPage.get()[0].contentWindow) doc = protoPage.get()[0].contentWindow.document;
+        else doc = protoPage.get()[0].document;
 
         var content = '<style>\n';
 
@@ -35,6 +37,12 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         doc.open();
         doc.writeln(content);
         doc.close();
+        if($scope.unsavedView){
+            protoPage.addClass('unsaved');
+        }else{
+            console.log('test');
+            protoPage.removeClass('unsaved');
+        }
     };
 
     $scope.changeTab = function(tab) {
@@ -48,8 +56,24 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     };
 
     $scope.preview = function() {
+        $scope.unsavedView=true;
         $scope.updateProtoPage();
-        $('#proto-page').addClass('unsaved');
+        $scope.socket.emit('updateView',{saved: false,room:$scope.room});
+    };
+
+    $scope.revert = function() {
+        RoomFactory.getRoom($scope.room._id).then(function(roomRes){
+            $scope.room=roomRes;
+            $scope.socket.emit('updateView',{saved: true,room:roomRes});
+            $scope.unsavedView=false;
+            $scope.unsavedCode = false;
+            $scope.updateProtoPage();
+            roomRes[$scope.selectedFileType].some(function(file){
+                if(file.name===$scope.selectedFile.name){
+                    $scope.selectedFile = file;
+                }
+            });
+        });
     };
 
     $scope.saveAndRender = function() {
@@ -60,9 +84,10 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
                     $scope.selectedFile = file;
                 }
             });
+            $scope.unsavedView = false; 
+            $scope.unsavedCode = false;
             $scope.updateProtoPage();
-            $('#proto-page').removeClass('unsaved');
-            $scope.socket.emit('updateView');
+            $scope.socket.emit('updateView',{saved: true,room:roomRes});
         }).then(null, function(err) {
             console.log(err);
         });
@@ -123,6 +148,9 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     };
 
     $scope.emitCode = function() {
+        if(!$scope.unsavedCode){
+            $scope.unsavedCode=true;
+        }
         setTimeout(function(){
             $scope.socket.emit('codeEdit',{
                 "selectedFileType":$scope.selectedFileType,
@@ -152,6 +180,9 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     });
 
     $scope.socket.on('codeEdited', function(code) {
+        if(!$scope.unsavedCode){
+            $scope.unsavedCode=true;
+        }
         $scope.room[code.selectedFileType].some(function(file){
             if(file.name===code.file.name){
                 file.content=code.file.content;
@@ -162,7 +193,15 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         $scope.$digest();
     });
 
-    $scope.socket.on('viewUpdated', function() {
+    $scope.socket.on('viewUpdated', function(viewInfo) {
+        $scope.unsavedView=!viewInfo.saved;
+        $scope.unsavedCode=!viewInfo.saved;
+        $scope.room=viewInfo.room;
+        $scope.room[$scope.selectedFileType].some(function(file){
+            if(file.name===$scope.selectedFile.name){
+                $scope.selectedFile = file;
+            }
+        });
         $scope.updateProtoPage();
         $scope.$digest();
     });
