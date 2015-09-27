@@ -14,6 +14,7 @@ app.controller('HomeController', function ($scope, roomList, user, RoomFactory) 
     $scope.createRoom = function(roomName,owner){
       RoomFactory.createRoom(roomName,owner).then(function(room){
         console.log('room created');
+        $scope.newRoomName='';
         $scope.ownedRooms.push(room);
       });
     };

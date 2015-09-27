@@ -62,7 +62,7 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         });
     };
 
-    $scope.openMemberModal = function(size) {
+    $scope.openMemberModal = function() {
 
         $modal.open({
             animation: $scope.animationsEnabled,
@@ -76,7 +76,7 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
         });
     };
 
-    $scope.openFileModal = function(size) {
+    $scope.openFileModal = function() {
 
         $modal.open({
             animation: $scope.animationsEnabled,
