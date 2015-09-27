@@ -8,27 +8,34 @@
       </div>
     </form>
     <br>
-    <div class="col-md-2"></div>
-    <div class="col-md-4" ng-show="user">
-      <ul class="list-group">
-        <li class="list-group-item header">
-          <h4>Owned Rooms</h4>
-        </li>
-        <li class="list-group-item" ng-repeat="room in ownedRooms">
-          <a ui-sref="room({roomId:room._id})">{{room.name}}</a>
-          <button class="btn btn-xs btn-danger float-right no-focus" type="button" ng-click="removeRoom(room._id)">X</button>
-        </li>
-      </ul>
+    <div ng-show="user">
+      <div class="col-md-2"></div>
+      <div class="col-md-4">
+        <ul class="list-group">
+          <li class="list-group-item header">
+            <h4>Owned Rooms</h4>
+          </li>
+          <li class="list-group-item" ng-repeat="room in ownedRooms">
+            <a ui-sref="room({roomId:room._id})">{{room.name}}</a>
+            <button class="btn btn-xs btn-danger float-right no-focus" type="button" ng-click="removeRoom(room._id)">X</button>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <ul class="list-group">
+          <li class="list-group-item header">
+            <h4>Member Rooms</h4>
+          </li>
+          <li class="list-group-item" ng-repeat="room in memberRooms">
+            <a ui-sref="room({roomId:room._id})">{{room.name}}</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
     </div>
-    <div class="col-md-4" ng-show="user">
-      <ul class="list-group">
-        <li class="list-group-item header">
-          <h4>Member Rooms</h4>
-        </li>
-        <li class="list-group-item" ng-repeat="room in memberRooms">
-          <a ui-sref="room({roomId:room._id})">{{room.name}}</a>
-        </li>
-      </ul>
+    <div class="center-text" ng-hide="user">
+      <br>
+      <button ui-sref="login" class="btn btn-info welcome login-button">Login</button>
+      <button ui-sref="signup" class="btn btn-info welcome login-button">Sign Up</button>
     </div>
-    <div class="col-md-2"></div>
 </section>
