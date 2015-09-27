@@ -67,8 +67,9 @@
       Manage {{selectedFileType.toUpperCase()}} File
     </button>
     <div class="float-right">
+      <button type="button no-focus" ng-show="unsavedCode" class="btn btn-default no-focus" ng-click="revert()"><i class="fa fa-undo"></i></button>
       <button type="button no-focus" class="btn btn-default no-focus" ng-click="preview()">Preview</button>
-      <button type="button no-focus" class="btn btn-default no-focus" ng-click="saveAndRender()">Save and Render</button>
+      <button type="button no-focus" class="btn btn-default no-focus" ng-click="saveAndRender()">Save</button>
     </div>
   </div>
   <!-- <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content" ng-keydown="emitCode()"></textarea> -->
