@@ -162,15 +162,20 @@ app.controller('RoomController', function($scope, room, RoomFactory, $modal) {
     $scope.downloadCode = function() {
         console.log('download');
         var zip = new JSZip();
-        $scope.room.html.forEach(function(file){
-            zip.file(file.name, file.content);
-        });
+        var htmlContent = '';
+        var cssFolder = zip.folder("css");
         $scope.room.css.forEach(function(file){
-            zip.file(file.name, file.content);
+            htmlContent += '<link rel="stylesheet" type="text/css" href="./css/'+file.name+'"/>\n';
+            cssFolder.file(file.name, file.content);
         });
+        htmlContent += $scope.room.html[0].content;
+        var jsFolder = zip.folder("js");
         $scope.room.js.forEach(function(file){
-            zip.file(file.name, file.content);
+            htmlContent += '\n<script src="./js/'+file.name+'"></script>';
+            jsFolder.file(file.name, file.content);
         });
+        htmlContent += '</script>';
+        zip.file($scope.room.html[0].name, htmlContent);
         var content = zip.generate();
         location.href="data:application/zip;base64," + content;
     };
