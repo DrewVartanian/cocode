@@ -4,11 +4,11 @@
     </div>
     <div class="modal-body">
         <ul class="list-group">
-            <li class="list-group-item" style="background-color:lightgrey">
+            <li class="list-group-item header">
               Owner: {{room.owner.email}}
             <li class="list-group-item clearfix" ng-repeat="member in room.members">
               {{ member.email}}
-              <button class="btn btn-danger float-right no-focus" type="button" ng-click="removeMember(member._id)">X</button>
+              <button class="btn btn-xs btn-danger float-right no-focus" type="button" ng-click="removeMember(member._id)">X</button>
             </li>
         </ul>
     </div>
@@ -26,11 +26,11 @@
     </div>
     <div class="modal-body">
         <ul class="list-group">
-            <li class="list-group-item" style="background-color:lightgrey">
+            <li class="list-group-item header">
               {{main.name}}
             <li class="list-group-item clearfix" ng-repeat="file in files">
               {{file.name}}
-              <button class="btn btn-danger float-right no-focus" type="button" ng-click="removeFile(file.name)">X</button>
+              <button class="btn btn-xs btn-danger float-right no-focus" type="button" ng-click="removeFile(file.name)">X</button>
             </li>
         </ul>
     </div>
@@ -66,7 +66,7 @@
     <button ng-hide="selectedFileType==='html'" type="button" class="btn btn-info manage-file-button no-focus" ng-click="openFileModal()">
       Manage {{selectedFileType.toUpperCase()}} File
     </button>
-    <button type="button no-focus" class="btn btn-default float-right" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
+    <button type="button no-focus" class="btn btn-default float-right no-focus" ng-click="saveAndRender(room)">Save and Render &rarr;</button>
   </div>
   <!-- <textarea class="fill-width no-focus" rows="33" ng-model="selectedFile.content" ng-keydown="emitCode()"></textarea> -->
   <!-- <pre id="embedded_ace_code" style="height: 666px;" class=" ace_editor ace-tm">

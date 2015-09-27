@@ -68,6 +68,16 @@ body {
   left: 112px
 }
 
+li.header {
+  background-color:lightgrey;
+}
+
+li {
+  h4 {
+    margin: 0;
+  }
+}
+
 .gly-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
   -webkit-transform: rotate(90deg);

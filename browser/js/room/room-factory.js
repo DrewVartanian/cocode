@@ -13,6 +13,13 @@ app.factory('RoomFactory', function($http) {
             });
     };
 
+    var removeRoom = function(roomId){
+      return $http.delete('/api/rooms/'+roomId)
+            .then(function(res){
+              return res.data;
+            });
+    };
+
     var getMyRooms = function() {
         return $http.get('/api/rooms/myRooms')
             .then(function(res) {
@@ -58,6 +65,7 @@ app.factory('RoomFactory', function($http) {
     return{
         getRoom:getRoom,
         createRoom:createRoom,
+        removeRoom:removeRoom,
         getMyRooms:getMyRooms,
         saveAndRender:saveAndRender,
         addMember:addMember,
