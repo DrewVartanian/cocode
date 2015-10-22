@@ -1,1 +1,3 @@
-# trfp
+# CoCode
+<a href="http://trfp.herokuapp.com/">http://trfp.herokuapp.com/</a>
+CoCode is a website where teams can collaboratively work to build a frontend prototype.  It supports separate HTML, CSS, and JavaScript files, and will allow you to preview and save any page that you write.  When developing with teammates, any changes you make will automatically be displayed in your teammates code, allowing you to work efficiently from different computers.
